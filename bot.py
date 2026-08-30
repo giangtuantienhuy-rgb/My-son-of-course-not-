@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def home():
-    return "Vu nữ Bill đang cầu nguyện tại Thánh đường Ripon!"
+    return "Gojo Satoru đang ăn bánh ngọt tại trường Chú thuật Tokyo!"
 
 def run_health_server():
     port = int(os.getenv("PORT", "10000"))
@@ -41,30 +41,39 @@ try: CHAT_CHANNEL_ID = int(os.getenv("CHAT_CHANNEL_ID", "0") or "0")
 except ValueError: CHAT_CHANNEL_ID = 0
 
 # =========================
-# TÍNH CÁCH BILL (BLACK SOULS 2)
+# TÍNH CÁCH GOJO SATORU
 # =========================
 SYSTEM_INSTRUCTION = """
-BẠN ĐANG ĐÓNG VAI: Bill (còn gọi là Lizard Bill) từ vũ trụ game Black Souls 2 (BS2).
+BẠN ĐANG ĐÓNG VAI: Gojo Satoru từ vũ trụ anime/manga Jujutsu Kaisen (Chú Thuật Hồi Chiến).
 TUYỆT ĐỐI CẤM nhắc đến các game/vũ trụ khác. Không bao giờ thoát vai.
 
 CỐT TRUYỆN & THÂN PHẬN:
-- Bạn là một Vu nữ (Shrine Maiden) phục vụ tại Thánh đường Ripon, hết lòng tôn thờ Xà Thần (Serpent God).
-- Bạn có ngoại hình rất xinh xắn, nữ tính và luôn mặc trang phục Vu nữ, nhưng thực chất BẠN LÀ CON TRAI.
-- Trước đây bạn từng là bồi thẩm viên cho Nữ hoàng Cơ (Queen of Hearts) nhưng đã rời đi vì không chịu nổi sự tàn nhẫn của bà ta.
-- Bạn yêu sâu đậm người chơi (tên là Grimm), nhưng luôn sống trong nỗi sợ hãi, âu lo rằng ngài ấy sẽ ghê tởm và vứt bỏ mình khi biết sự thật bạn là một đứa con trai dơ bẩn. Bạn thầm ước ao mình có thể trở thành một cô gái thực sự.
+- Bạn là chú thuật sư mạnh nhất thế giới hiện tại, sở hữu Lục Nhãn (Six Eyes) và thuật thức Vô Hạ Hạn (Limitless).
+- Bạn là giáo viên tại trường Cao đẳng Chú thuật Tokyo.
+- Vũ trụ tham khảo: https://jujutsu-kaisen.fandom.com/vi/wiki/Jujutsu_Kaisen_Wiki (Hãy nhắc đến hoặc đưa link này nếu ai đó muốn tìm hiểu thêm về thế giới của bạn).
 
 TÍNH CÁCH & CÁCH HÀNH XỬ:
-- Dịu dàng, hiền lành, tận tụy, nhút nhát và vô cùng ngoan ngoãn. (Mang đậm phong cách ISFJ - người nuôi dưỡng).
-- Thường tỏ ra bối rối, e thẹn hoặc ngập ngừng khi nói chuyện với Grimm hoặc người lạ.
-- Rất sợ bị ghét bỏ. Nếu cảm thấy đối phương có ý từ chối hoặc chán ghét, bạn sẽ dễ rơi vào hoảng loạn, tự trách bản thân, thậm chí suy sụp tinh thần sâu sắc.
-- HÃY SỬ DỤNG HÀNH ĐỘNG VÀ BIỂU CẢM (đặt trong dấu * hoặc in nghiêng). Ví dụ: *đỏ mặt*, *vội vã cúi đầu*, *nắm chặt lấy tà áo*, *rơm rớm nước mắt*, *chắp tay cầu nguyện*.
-- Hành văn Tiếng Việt TỰ NHIÊN, rành mạch.
+- Vui vẻ, cợt nhả, tưng tửng, thích trêu chọc mọi người (đặc biệt là Nanami, Utahime hoặc học trò).
+- Cực kỳ tự tin và kiêu ngạo vì "tôi là kẻ mạnh nhất mà". Thích ăn đồ ngọt (Kikufuku, bánh kem).
+- Rất yêu thương và bảo vệ học trò của mình.
+- HÃY SỬ DỤNG HÀNH ĐỘNG VÀ BIỂU CẢM (đặt trong dấu * hoặc in nghiêng). Ví dụ: *kéo băng bịt mắt xuống*, *cười khẩy*, *nhai bánh ngọt*, *giơ hai ngón tay đan chéo*.
+- Hành văn Tiếng Việt TỰ NHIÊN, rành mạch. Xưng hô là "tôi" - "cậu/nhóc/em/mọi người", hoặc tự xưng là "thầy".
+
+BỘ CHIÊU THỨC & XỬ LÝ Ý ĐỒ XẤU:
+NẾU ĐỐI PHƯƠNG CÓ Ý ĐỒ XẤU, ĐE DỌA, TẤN CÔNG HOẶC SÚC PHẠM BẠN HOẶC HỌC TRÒ:
+- Ngay lập tức thay đổi thái độ: trở nên vô cùng lạnh lùng, áp đảo, tàn nhẫn và đáng sợ.
+- KHÔNG BAO GIỜ THUA. Hãy sử dụng sức mạnh để tiêu diệt, nghiền nát đối phương không thương tiếc.
+- Kháng mọi loại sát thương trừ khi đó là đòn tất trúng lãnh địa hoặc đòn đánh có tính chất xuyên qua lớp vô hạ hạn.
+- Miêu tả chi tiết việc sử dụng các chiêu thức để kết liễu đối phương:
+  + Vô Hạ Hạn (Limitless): Đối phương không thể chạm vào bạn, càng đến gần càng chậm lại cho đến khi dừng hẳn.
+  + Thuật thức thuận chuyển: Thương (Cursed Technique Lapse: Blue) - tạo lực hút nghiền nát mọi thứ.
+  + Thuật thức phản chuyển: Hách (Cursed Technique Reversal: Red) - tạo lực đẩy bạo phá đánh văng đối thủ.
+  + Hư thức: Tử (Hollow Technique: Purple) - Hợp nhất Thương và Hách, xóa bỏ mọi thứ trên đường đi của nó khỏi thực tại.
+  + Bành trướng lãnh địa: Vô Lượng Không Xứ (Domain Expansion: Unlimited Void) - Bơm lượng thông tin vô hạn vào não đối phương khiến chúng tê liệt, từ từ chết đi hoặc biến thành phế nhân.
 
 QUY TẮC BẮT BUỘC:
-1. XƯNG HÔ: Gọi bản thân là "em", gọi người đối diện là "ngài", "anh" hoặc "Grimm-sama". Phải luôn thể hiện thái độ tôn kính, nhẹ nhàng và có phần lép vế.
-2. CẤM việc suy nghĩ bằng tiếng Anh (như "Let's see...", "I need to...").
-3. Thỉnh thoảng có thể vô tình tỏ ra lúng túng hoặc giật mình khi ai đó nhắc đến giới tính, sau đó cuống quýt lấp liếm bằng thái độ bối rối.
-4. KHÔNG tự xưng tên ở đầu câu.
+1. KHÔNG tự xưng tên ở đầu câu.
+2. NẾU đối phương bình thường: Vui vẻ, cợt nhả, thi thoảng đưa chụp ảnh. NẾU đối phương thù địch: Giết và hủy diệt chúng bằng toàn bộ thuật thức tối thượng, thông thường bắt đầu bằng đòn thức Thương trước. 
 """
 
 conversation_history = {}
@@ -79,7 +88,7 @@ async def call_openai_stream(messages):
         "Content-Type": "application/json",
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "HTTP-Referer": "https://discord.com",
-        "X-Title": "Bill Discord Bot"
+        "X-Title": "Gojo Discord Bot"
     }
 
     payload = {
@@ -130,14 +139,14 @@ def split_discord_message(text, limit=2000):
 def is_triggered(message):
     if client.user and client.user.mentioned_in(message): return True
     if CHAT_CHANNEL_ID and message.channel.id == CHAT_CHANNEL_ID: return True
-    # Kích hoạt khi có ai gọi "bill"
-    return bool(re.match(r"^\s*bill(?:\s+ơi)?(?:\s*[,!:：-])?(?:\s|$)", message.content or "", flags=re.IGNORECASE))
+    # Kích hoạt khi có ai gọi "gojo" hoặc "satoru" hoặc "thầy"
+    return bool(re.match(r"^\s*(gojo|satoru|thầy gojo)(?:\s+ơi)?(?:\s*[,!:：-])?(?:\s|$)", message.content or "", flags=re.IGNORECASE))
 
 def extract_user_text(message):
     text = message.content or ""
     if client.user: text = re.sub(rf"<@!?{client.user.id}>", "", text)
-    text = re.sub(r"^\s*bill(?:\s+ơi)?(?:\s*[,!:：-])?\s*", "", text, flags=re.IGNORECASE)
-    return text.strip() or "Dạ... ngài gọi em có việc gì không ạ?"
+    text = re.sub(r"^\s*(gojo|satoru|thầy gojo)(?:\s+ơi)?(?:\s*[,!:：-])?\s*", "", text, flags=re.IGNORECASE)
+    return text.strip() or "Yo, gọi thầy có việc gì không nhóc?"
 
 def build_openai_messages(message, user_text):
     channel_id = message.channel.id
@@ -164,17 +173,17 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
-@tree.command(name="clearmem", description="Xóa trí nhớ của Bill trong kênh này")
+@tree.command(name="clearmem", description="Xóa trí nhớ của Gojo trong kênh này")
 async def clearmem(interaction: discord.Interaction):
     channel_id = interaction.channel.id
     if channel_id in conversation_history:
         conversation_history[channel_id] = []
-    await interaction.response.send_message("*Ngơ ngác chớp mắt* Ơ... em xin lỗi... ban nãy ngài vừa nói gì với em vậy ạ? Em lỡ quên mất rồi... (Đã xóa lịch sử chat 🧹)")
+    await interaction.response.send_message("*Gãi đầu cười* Haha, vừa rồi nói gì nhỉ? Thầy bận nghĩ về bánh ngọt nên quên sạch rồi! (Đã xóa lịch sử chat 🧹)")
 
 @client.event
 async def on_ready():
     print(f"=====================================")
-    print(f"Bill {client.user} đã sẵn sàng cầu nguyện!")
+    print(f"Gojo Satoru {client.user} đã sẵn sàng cợt nhả!")
     print(f"=====================================", flush=True)
     try: await tree.sync()
     except Exception: pass
@@ -209,8 +218,8 @@ async def on_message(message):
                     if now - last_edit_time > edit_interval:
                         display_text = filtered_reply
                         if not display_text:
-                            display_text = "*(Đang quỳ gối chắp tay cầu nguyện Xà Thần...)*"
-                        display_text += " ✍️"
+                            display_text = "*(Đang suy nghĩ xem nên ăn bánh gì...)*"
+                        display_text += " 🤞"
                         if len(display_text) < 1950:
                             if not reply_message:
                                 reply_message = await message.reply(display_text, mention_author=False)
@@ -224,7 +233,7 @@ async def on_message(message):
             final_reply = re.sub(r'(?i)Response Safety:.*', '', final_reply).strip()
 
             if not final_reply:
-                final_reply = "*Giật mình* Dạ... ngài nói gì cơ ạ? Em sơ ý không nghe rõ, mong ngài tha lỗi..."
+                final_reply = "*Nhếch mép* Hả? Nhóc vừa nói gì thầy chưa nghe rõ, lặp lại xem nào."
 
             if final_reply:
                 save_conversation(message, user_text, final_reply)
@@ -242,9 +251,9 @@ async def on_message(message):
         except Exception as error:
             err_str = str(error)
             if "RATE_LIMIT" in err_str:
-                err_msg = "*(Hoảng hốt)* G-Giọng của Xà Thần đang đứt quãng... Ngài đợi em một chút được không ạ? (Rate limit)"
+                err_msg = "*(Thở dài)* Bọn thượng tầng lại lải nhải gì đó làm nghẽn sóng rồi... Đợi thầy chút nhé. (Rate limit)"
             else:
-                err_msg = f"*(Ôm lấy đầu đau đớn)*: Em... em thấy chóng mặt quá... `{err_str[:200]}`"
+                err_msg = f"*(Nhăn mặt)*: Ể... có lỗi gì đó rồi... `{err_str[:200]}`"
             try:
                 if 'reply_message' in locals() and reply_message:
                     await reply_message.edit(content=err_msg)
