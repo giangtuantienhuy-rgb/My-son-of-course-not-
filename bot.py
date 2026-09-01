@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import re
-import socket
 import time
 from threading import Thread
 
@@ -11,6 +10,7 @@ import discord
 from discord import app_commands
 import aiohttp
 from flask import Flask
+from openai import AsyncOpenAI  # <--- ĐÃ THÊM THƯ VIỆN NÀY CHO GOJO
 
 # =========================
 # HEALTH CHECK
@@ -39,6 +39,12 @@ OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://openrouter.ai/api/v1").s
 MAX_HISTORY_MESSAGES = 8
 try: CHAT_CHANNEL_ID = int(os.getenv("CHAT_CHANNEL_ID", "0") or "0")
 except ValueError: CHAT_CHANNEL_ID = 0
+
+# KHỞI TẠO CLIENT OPENAI (KẾT NỐI OPENROUTER)
+aclient = AsyncOpenAI(
+    base_url=OPENAI_BASE_URL,
+    api_key=OPENAI_API_KEY,
+)
 
 # =========================
 # TÍNH CÁCH GOJO SATORU
@@ -80,55 +86,30 @@ conversation_history = {}
 channel_locks = {}
 
 # =========================
-# GỌI API 
+# GỌI API (ĐÃ NÂNG CẤP DÙNG OPENAI SDK)
 # =========================
 async def call_openai_stream(messages):
-    url = f"{OPENAI_BASE_URL}/chat/completions"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "HTTP-Referer": "https://discord.com",
-        "X-Title": "Gojo Discord Bot"
-    }
-
-    payload = {
-        "model": OPENAI_MODEL,
-        "messages": messages,
-        "stream": True,
-        "temperature": 0.8,
-        "frequency_penalty": 0.2, 
-        "max_tokens": 800
-    }
-
-    connector = aiohttp.TCPConnector(family=socket.AF_INET)
-    async with aiohttp.ClientSession(connector=connector) as session:
-        try:
-            async with session.post(
-                url, headers=headers, json=payload,
-                timeout=aiohttp.ClientTimeout(sock_connect=10, sock_read=60)
-            ) as response:
-                
-                if response.status == 429: raise RuntimeError("RATE_LIMIT")
-                if not response.ok:
-                    raise RuntimeError(f"Lỗi hệ thống ({response.status})")
-
-                async for raw_line in response.content:
-                    if not raw_line: continue
-                    line = raw_line.decode('utf-8').strip()
-                    if not line.startswith("data:"): continue
-                    raw_data = line[5:].strip()
-                    if raw_data == "[DONE]": break
-
-                    try:
-                        data = json.loads(raw_data)
-                        choices = data.get("choices", [])
-                        if choices:
-                            delta = choices[0].get("delta", {})
-                            text = delta.get("content", "")
-                            if text: yield text
-                    except json.JSONDecodeError: continue
-        except (aiohttp.ClientError, asyncio.TimeoutError) as error:
-            raise RuntimeError(f"Lỗi mạng: {error}")
+    try:
+        response = await aclient.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=messages,
+            stream=True,
+            temperature=0.8,
+            frequency_penalty=0.2,
+            max_tokens=800,
+            extra_headers={
+                "HTTP-Referer": "https://discord.com",
+                "X-OpenRouter-Title": "Gojo Discord Bot" # ĐÃ SỬA CHUẨN OPENROUTER
+            }
+        )
+        async for chunk in response:
+            if chunk.choices and chunk.choices[0].delta.content:
+                yield chunk.choices[0].delta.content
+    except Exception as e:
+        err_msg = str(e)
+        if "429" in err_msg or "rate limit" in err_msg.lower():
+            raise RuntimeError("RATE_LIMIT")
+        raise RuntimeError(f"Lỗi mạng: {err_msg}")
 
 # =========================
 # LỊCH SỬ & TIN NHẮN
@@ -261,6 +242,17 @@ async def on_message(message):
                     await message.reply(err_msg, mention_author=False)
             except discord.DiscordException: pass
 
+# =========================
+# VÒNG LẶP CHỐNG CRASH
+# =========================
 if __name__ == "__main__":
     keep_alive()
-    client.run(DISCORD_TOKEN, log_handler=None)
+    
+    while True:
+        try:
+            print("Đang khởi động kết nối tới Discord...")
+            client.run(DISCORD_TOKEN, log_handler=None)
+        except Exception as e:
+            print(f"Bot gặp lỗi nghiêm trọng (crash): {e}")
+            print("Đang cố gắng khởi động lại sau 10 giây...")
+            time.sleep(10)
